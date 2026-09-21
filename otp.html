@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Priyadharshan</title>
+
+    <!-- Supabase JavaScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: #f5f5f5;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 424px;
+            min-height: 100vh;
+
+            padding: 0 26px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            background: #170b1f;
+
+            color: #ffffff;
+        }
+
+        /* ================================
+           MAIN SCREEN
+        ================================= */
+
+        .intro {
+            margin-bottom: 78px;
+        }
+
+        .hello {
+            font-size: 31px;
+            font-weight: 700;
+            line-height: 1.1;
+
+            margin-bottom: 5px;
+        }
+
+        .name {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.05;
+
+            color: #716676;
+
+            letter-spacing: -1px;
+
+            margin-bottom: 9px;
+        }
+
+        .description {
+            max-width: 365px;
+
+            font-size: 16px;
+            line-height: 1.25;
+
+            color: #d0c8d2;
+        }
+
+        .section-title {
+            font-size: 14px;
+
+            color: #cfc5d1;
+
+            margin-bottom: 29px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+
+            gap: 25px;
+        }
+
+        .auth-button {
+            width: 100%;
+            height: 55px;
+
+            border: 1px solid #c9c1ca;
+            border-radius: 8px;
+
+            background: transparent;
+
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .auth-button:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .auth-button:active {
+            transform: scale(0.99);
+        }
+
+        .google-icon {
+            width: 25px;
+            height: 25px;
+
+            margin-right: 17px;
+        }
+
+        .login-text {
+            margin-top: 17px;
+
+            text-align: center;
+
+            color: #bfb6c1;
+
+            font-size: 14px;
+        }
+
+        .login-text span {
+            color: #637cff;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        /* ================================
+           PHONE / OTP SCREENS
+        ================================= */
+
+        .screen {
+            display: none;
+
+            width: 100%;
+        }
+
+        .back {
+            color: #cfc5d1;
+
+            font-size: 14px;
+
+            margin-bottom: 25px;
+
+            cursor: pointer;
+        }
+
+        .back:hover {
+            color: #ffffff;
+        }
+
+        .screen-title {
+            font-size: 28px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+        .screen-description {
+            color: #cfc5d1;
+
+            font-size: 15px;
+
+            line-height: 1.4;
+
+            margin-bottom: 28px;
+        }
+
+        input {
+            width: 100%;
+            height: 55px;
+
+            border: 1px solid #c9c1ca;
+            border-radius: 8px;
+
+            background: transparent;
+
+            color: #ffffff;
+
+            padding: 0 16px;
+
+            font-size: 16px;
+
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #8e8491;
+        }
+
+        input:focus {
+            border-color: #ffffff;
+        }
+
+        #otpInput {
+            text-align: center;
+
+            letter-spacing: 8px;
+
+            font-size: 22px;
+
+            font-weight: 600;
+        }
+
+        .action-button {
+            width: 100%;
+            height: 55px;
+
+            margin-top: 18px;
+
+            border: none;
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #170b1f;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .action-button:hover {
+            opacity: 0.9;
+        }
+
+        .action-button:active {
+            transform: scale(0.99);
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+
+            cursor: not-allowed;
+        }
+
+        .status {
+            min-height: 20px;
+
+            margin-top: 15px;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            line-height: 1.4;
+
+            color: #cfc5d1;
+        }
+
+        .success {
+            color: #7ee787;
+        }
+
+        .error {
+            color: #ff7b7b;
+        }
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media (max-width: 500px) {
+
+            body {
+                background: #170b1f;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-height: 700px) {
+
+            .intro {
+                margin-bottom: 45px;
+            }
+
+            .buttons {
+                gap: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="container">
+
+    <!-- =================================
+         MAIN PAGE
+    ================================== -->
+
+    <section id="mainScreen">
+
+        <div class="intro">
+
+            <div class="hello">
+                Hey, I’m
+            </div>
+
+            <div class="name">
+                PRIYADHARSHAN
+            </div>
+
+            <div class="description">
+                Explore my projects, experiments, ideas, and
+                everything I’m building along the way.
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            Let’s Get Started...
+        </div>
+
+
+        <div class="buttons">
+
+            <!-- PHONE -->
+
+            <button
+                type="button"
+                class="auth-button"
+                onclick="showPhoneScreen()"
+            >
+                Continue with phone
+            </button>
+
+
+            <!-- GOOGLE -->
+
+            <button
+                type="button"
+                class="auth-button"
+                onclick="googleLogin()"
+            >
+                <img
+                    class="google-icon"
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    alt="Google"
+                >
+
+                Continue with Google
+            </button>
+
+
+            <!-- EMAIL -->
+
+            <button
+                type="button"
+                class="auth-button"
+                onclick="emailLogin()"
+            >
+                Continue with Email
+            </button>
+
+        </div>
+
+
+        <div class="login-text">
+
+            Already have an account?
+
+            <span onclick="login()">
+                Login
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================
+         PHONE NUMBER PAGE
+    ================================== -->
+
+    <section
+        id="phoneScreen"
+        class="screen"
+    >
+
+        <div
+            class="back"
+            onclick="showMainScreen()"
+        >
+            ← Back
+        </div>
+
+
+        <div class="screen-title">
+            Enter your phone
+        </div>
+
+
+        <div class="screen-description">
+            Enter your phone number and we'll send you
+            a verification code.
+        </div>
+
+
+        <input
+            id="phoneInput"
+            type="tel"
+            placeholder="+91 9876543210"
+            autocomplete="tel"
+        >
+
+
+        <button
+            id="sendOtpButton"
+            type="button"
+            class="action-button"
+            onclick="sendOTP()"
+        >
+            Send OTP
+        </button>
+
+
+        <div
+            id="phoneStatus"
+            class="status"
+        ></div>
+
+    </section>
+
+
+    <!-- =================================
+         OTP PAGE
+    ================================== -->
+
+    <section
+        id="otpScreen"
+        class="screen"
+    >
+
+        <div
+            class="back"
+            onclick="showPhoneScreen()"
+        >
+            ← Back
+        </div>
+
+
+        <div class="screen-title">
+            Enter OTP
+        </div>
+
+
+        <div class="screen-description">
+            Enter the 6-digit verification code sent
+            to your phone.
+        </div>
+
+
+        <input
+            id="otpInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="123456"
+            autocomplete="one-time-code"
+        >
+
+
+        <button
+            id="verifyOtpButton"
+            type="button"
+            class="action-button"
+            onclick="verifyOTP()"
+        >
+            Sign in with OTP
+        </button>
+
+
+        <div
+            id="otpStatus"
+            class="status"
+        ></div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    /* =====================================================
+       SUPABASE CONFIGURATION
+    ===================================================== */
+
+    const SUPABASE_URL =
+        "https://wlokgxfjbpjplekkxupf.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_Cfc2YzDzwk33DAr-QHH92Q_-RDAdFCH";
+
+
+    /* =====================================================
+       SUPABASE CLIENT
+    ===================================================== */
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY,
+            {
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: true
+                }
+            }
+        );
+
+
+    /* =====================================================
+       SCREEN FUNCTIONS
+    ===================================================== */
+
+    function hideAllScreens() {
+
+        document.getElementById("mainScreen").style.display =
+            "none";
+
+        document.getElementById("phoneScreen").style.display =
+            "none";
+
+        document.getElementById("otpScreen").style.display =
+            "none";
+    }
+
+
+    function showMainScreen() {
+
+        hideAllScreens();
+
+        document.getElementById("mainScreen").style.display =
+            "block";
+    }
+
+
+    function showPhoneScreen() {
+
+        hideAllScreens();
+
+        document.getElementById("phoneScreen").style.display =
+            "block";
+
+        document.getElementById("phoneStatus").textContent =
+            "";
+
+        setTimeout(() => {
+
+            document
+                .getElementById("phoneInput")
+                .focus();
+
+        }, 100);
+    }
+
+
+    function showOTPScreen() {
+
+        hideAllScreens();
+
+        document.getElementById("otpScreen").style.display =
+            "block";
+
+        setTimeout(() => {
+
+            document
+                .getElementById("otpInput")
+                .focus();
+
+        }, 100);
+    }
+
+
+    /* =====================================================
+       SEND OTP
+    ===================================================== */
+
+    async function sendOTP() {
+
+        const phoneInput =
+            document.getElementById("phoneInput");
+
+        const phoneStatus =
+            document.getElementById("phoneStatus");
+
+        const sendButton =
+            document.getElementById("sendOtpButton");
+
+
+        const phone =
+            phoneInput.value.trim();
+
+
+        phoneStatus.className =
+            "status";
+
+        phoneStatus.textContent =
+            "";
+
+
+        /* Check empty number */
+
+        if (!phone) {
+
+            phoneStatus.className =
+                "status error";
+
+            phoneStatus.textContent =
+                "Please enter your phone number.";
+
+            return;
+        }
+
+
+        /* Require + country code */
+
+        if (!phone.startsWith("+")) {
+
+            phoneStatus.className =
+                "status error";
+
+            phoneStatus.textContent =
+                "Enter the number with country code, e.g. +91XXXXXXXXXX.";
+
+            return;
+        }
+
+
+        sendButton.disabled = true;
+
+        sendButton.textContent =
+            "Sending OTP...";
+
+
+        try {
+
+            /*
+             * Supabase SMS OTP
+             */
+
+            const { error } =
+                await supabaseClient.auth.signInWithOtp({
+                    phone: phone
+                });
+
+
+            if (error) {
+
+                console.error(
+                    "SEND OTP ERROR:",
+                    error
+                );
+
+                phoneStatus.className =
+                    "status error";
+
+                phoneStatus.textContent =
+                    error.message;
+
+                return;
+            }
+
+
+            /*
+             * OTP sent successfully
+             */
+
+            document.getElementById("otpStatus")
+                .className =
+                "status";
+
+
+            document.getElementById("otpStatus")
+                .textContent =
+                "OTP sent to " + phone;
+
+
+            showOTPScreen();
+
+
+        } catch (error) {
+
+            console.error(
+                "UNEXPECTED ERROR:",
+                error
+            );
+
+            phoneStatus.className =
+                "status error";
+
+            phoneStatus.textContent =
+                "Something went wrong. Please try again.";
+
+        } finally {
+
+            sendButton.disabled = false;
+
+            sendButton.textContent =
+                "Send OTP";
+        }
+    }
+
+
+    /* =====================================================
+       VERIFY OTP
+    ===================================================== */
+
+    async function verifyOTP() {
+
+        const phone =
+            document.getElementById("phoneInput")
+                .value
+                .trim();
+
+
+        const token =
+            document.getElementById("otpInput")
+                .value
+                .trim();
+
+
+        const otpStatus =
+            document.getElementById("otpStatus");
+
+
+        const verifyButton =
+            document.getElementById("verifyOtpButton");
+
+
+        otpStatus.className =
+            "status";
+
+        otpStatus.textContent =
+            "";
+
+
+        /* Validate OTP */
+
+        if (!token) {
+
+            otpStatus.className =
+                "status error";
+
+            otpStatus.textContent =
+                "Please enter the OTP.";
+
+            return;
+        }
+
+
+        if (token.length !== 6) {
+
+            otpStatus.className =
+                "status error";
+
+            otpStatus.textContent =
+                "Please enter the 6-digit OTP.";
+
+            return;
+        }
+
+
+        verifyButton.disabled = true;
+
+        verifyButton.textContent =
+            "Verifying...";
+
+
+        try {
+
+            /*
+             * Verify SMS OTP
+             */
+
+            const { data, error } =
+                await supabaseClient.auth.verifyOtp({
+
+                    phone: phone,
+
+                    token: token,
+
+                    type: "sms"
+
+                });
+
+
+            if (error) {
+
+                console.error(
+                    "VERIFY OTP ERROR:",
+                    error
+                );
+
+                otpStatus.className =
+                    "status error";
+
+                otpStatus.textContent =
+                    error.message;
+
+                return;
+            }
+
+
+            /* =============================================
+               SUCCESS
+            ============================================= */
+
+            console.log(
+                "USER:",
+                data.user
+            );
+
+            console.log(
+                "SESSION:",
+                data.session
+            );
+
+
+            otpStatus.className =
+                "status success";
+
+            otpStatus.textContent =
+                "✓ OTP verified successfully!";
+
+
+        } catch (error) {
+
+            console.error(
+                "UNEXPECTED VERIFY ERROR:",
+                error
+            );
+
+            otpStatus.className =
+                "status error";
+
+            otpStatus.textContent =
+                "Something went wrong. Please try again.";
+
+        } finally {
+
+            verifyButton.disabled = false;
+
+            verifyButton.textContent =
+                "Sign in with OTP";
+        }
+    }
+
+
+    /* =====================================================
+       OTHER BUTTONS
+       
+       NOT CONNECTED YET
+    ===================================================== */
+
+    function googleLogin() {
+
+        alert(
+            "Google login will be connected later."
+        );
+    }
+
+
+    function emailLogin() {
+
+        alert(
+            "Email login will be connected later."
+        );
+    }
+
+
+    function login() {
+
+        alert(
+            "Login will be connected later."
+        );
+    }
+
+
+    /* =====================================================
+       OTP INPUT
+       Numbers only
+    ===================================================== */
+
+    document
+        .getElementById("otpInput")
+        .addEventListener(
+            "input",
+            function () {
+
+                this.value =
+                    this.value
+                        .replace(/\D/g, "")
+                        .slice(0, 6);
+
+            }
+        );
+
+
+    /* =====================================================
+       ENTER KEY
+    ===================================================== */
+
+    document
+        .getElementById("phoneInput")
+        .addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+
+                    sendOTP();
+
+                }
+
+            }
+        );
+
+
+    document
+        .getElementById("otpInput")
+        .addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+
+                    verifyOTP();
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+       START
+    ===================================================== */
+
+    showMainScreen();
+
+</script>
+
+</body>
+</html>
